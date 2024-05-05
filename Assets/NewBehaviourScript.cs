@@ -16,6 +16,11 @@ public class NewBehaviourScript : MonoBehaviour
     
     void Update()
     {
+        
+    }
+    private void Play()
+
+    {
         SceneManager.LoadScene(1);
     }
 }
