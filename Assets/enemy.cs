@@ -3,29 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class enemy : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-    private NavMeshAgent myAgent;
-    private float Distance;
-    public Transform target;
-    
-    // Start is called before the first frame update
-    void Start()
+    NavMeshAgent agent;
+    public Transform checkpoint;
+    Animator anim;
+    public static int toPlayerChance;
+    public Transform player;
+
+    private void Awake()
     {
-        myAgent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
+        anim = agent.GetComponent<Animator>();
+        Invoke("Move", 5f);
     }
 
-    // Update is called once per frame
-    void Update()
+
+    void Move()
     {
-        Distance = Vector3.Distance(target.position, transform.position);
-        if (Distance > 10) ;
+        NextPoints point = checkpoint.GetComponent<NextPoints>();
+        if (point is AttackPoints)
         {
-            myAgent.enabled = false;
+            AttackPoints nearPoint = checkpoint.GetComponent<AttackPoints>();
+            bool isOpen = nearPoint.isOpen;
+            if (isOpen)
+            {
+                agent.destination = player.position;
+
+            }
+            else
+            {
+                checkpoint = point.getNext();
+                agent.destination = checkpoint.position;
+                Invoke("Move", 3f);
+            }
+
         }
-        if (Distance < 10 & Distance > 1.5f) ;
+
+        else
         {
-            myAgent.enabled = true;
+            checkpoint = point.getNext();
+            agent.destination = checkpoint.position;
+            Invoke("Move", 3f);
         }
     }
+    private void Update()
+    {
+        if (agent.velocity.x != 0 | agent.velocity.z != 0)
+        {
+            anim.SetBool("IsMove", true);
+        }
+        else
+        {
+            anim.SetBool("IsMove", false);
+        }
+    }
+
 }
