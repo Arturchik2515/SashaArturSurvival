@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
     Animator anim;
     public static int toPlayerChance;
     public Transform player;
+    
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class EnemyController : MonoBehaviour
     void Move()
     {
         NextPoints point = checkpoint.GetComponent<NextPoints>();
+
         if (point is AttackPoints)
         {
             AttackPoints nearPoint = checkpoint.GetComponent<AttackPoints>();
@@ -59,4 +61,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+}
+
+internal class AttackPoints : NextPoints
+{
+    internal bool isOpen;
 }
